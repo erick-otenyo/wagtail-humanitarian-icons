@@ -1,0 +1,167 @@
+{% load wagtailadmin_tags %}
+<style>
+
+    #dialog-icon .w-dialog__content {
+        padding: 48px 40px;
+    }
+
+
+    .icon-selector-container {
+        margin-bottom: 30px;
+    }
+
+    .icon-selector {
+    }
+
+    #icon-button {
+        height: 50px;
+        padding: 10px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        border-radius: 3px;
+    }
+
+
+    #icon-options {
+        margin: 20px 0;
+        display: flex;
+        flex-wrap: wrap;
+        height: 100%;
+        overflow: scroll;
+        justify-content: center;
+    }
+
+    .svg-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 50px;
+        overflow: hidden;
+        width: 100px;
+        margin: 20px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .icon-label {
+        font-size: 12px;
+        width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .icon-option {
+        height: 40px;
+        width: 40px;
+    }
+
+    .selected-icon {
+        height: 24px;
+        width: 24px;
+        margin-right: 10px;
+    }
+
+</style>
+
+<script>
+    const selectedIcon = "{% if widget.value != None %}{{ widget.value|stringformat:'s' }}{% endif %}"
+
+    $(document).ready(function () {
+
+        const $iconSelected = $("#selected-icon")
+        const $iconOptions = $("#icon-options")
+
+        // form Data
+        const $iconEl = $("input[name='icon']")
+
+        const iconDialog = document.getElementById("dialog-icon")
+
+        const createIconOptions = (onSelect) => {
+            const $svgDefs = $('div[data-sprite] svg defs symbol')
+
+            $svgDefs.each(function () {
+                let iconId = $(this).attr("id")
+                const parts = iconId.split("-")
+
+                if (parts[0] === "icon") {
+                    iconId = parts.slice(1).join("-")
+                }
+
+                createIconOption(iconId, onSelect).appendTo($iconOptions)
+            })
+        }
+
+        const createIconOption = (iconId, onSelect) => {
+            const $container = $("<div class='svg-container'>")
+            $container.on("click", () => onSelect(iconId))
+            $(`<svg class="icon icon-option" aria-hidden="true">
+            <use href="#icon-${iconId}"></use>
+        </svg>`).appendTo($container)
+
+            $(`<div class="icon-label">${iconId}</div>`).appendTo($container)
+
+            return $container
+        }
+
+        const handleOnSelectColor = (iconId) => {
+            const svg = $(`<svg class="icon selected-icon" aria-hidden="true">
+            <use href="#icon-${iconId}"></use>
+        </svg>`)
+
+            $iconSelected.html(svg)
+
+            $iconEl.val(iconId)
+
+            // hide color dialog
+            iconDialog.dispatchEvent(new CustomEvent("wagtail:hide"))
+        }
+
+        createIconOptions(handleOnSelectColor)
+
+
+        $("#id_icon_filter").on("keyup", function () {
+            const value = $(this).val().toLowerCase();
+            $("#icon-options div").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+</script>
+
+<div class="icon-selector-container">
+    <div class="icon-selector">
+        <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %}
+               value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
+        <button id="icon-button" type="button" class="button button-secondary"
+                data-a11y-dialog-show="dialog-icon">
+            {% if widget.value %}
+                <svg class="icon selected-icon" id="selected-icon" aria-hidden="true">
+                    <use href="#icon-{{ widget.value }}"></use>
+                </svg>
+            {% endif %}
+            <span class="icon-select-message">
+                Click to choose icon
+            </span>
+        </button>
+        {% dialog id="dialog-icon" title="Select Icon" %}
+            <div class="w-field__wrapper w-mb-0" data-field-wrapper="" style="margin-top: 20px">
+                <label class="w-field__label w-sr-only" for="id_icon_filter" id="id__icon_filter-label">
+                    Search icon
+                </label>
+                <div class="w-field w-field--char_field w-field--text_input" data-field="" data-contentpath="q">
+                    <div class="w-field__input" data-field-input="">
+                        <svg class="icon icon-search w-field__icon" aria-hidden="true">
+                            <use href="#icon-search"></use>
+                        </svg>
+                        <input type="text" name="search_icon" placeholder="Search icon" id="id_icon_filter">
+                    </div>
+                </div>
+            </div>
+            <div id="icon-options">
+            </div>
+        {% enddialog %}
+    </div>
+</div>
