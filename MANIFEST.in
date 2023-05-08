@@ -1,0 +1,6 @@
+include README.md
+recursive-include wagtailhumanitarianicons *.html
+recursive-include wagtailhumanitarianicons *.py
+recursive-include wagtailhumanitarianicons *.json
+recursive-include wagtailhumanitarianicons/static *
+recursive-include wagtailhumanitarianicons/templates *
