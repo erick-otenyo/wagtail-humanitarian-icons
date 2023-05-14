@@ -29,7 +29,9 @@
 </header>
 <main class="main">
     <div class="figure">
-        {% icon name=page.icon classname="figure-space" %}
+        {% if page.icon %}
+            {% icon name=page.icon classname="figure-space" %}
+        {% endif %}
     </div>
     <div class="main-text">
         <h1>{% trans "Welcome to your new Wagtail site!" %}</h1>
