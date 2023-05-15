@@ -9,7 +9,9 @@ This package aims to provide a way to select and use predefined humanitarian ico
 
 # Installation
 
-```pip install wagtail-humanitarian-icons```
+```
+pip install wagtail-humanitarian-icons
+```
 
 Add `wagtailhumanitarianicons` to your installed apps
 
@@ -22,7 +24,7 @@ Add `wagtailhumanitarianicons` to your installed apps
 ```
 
 # Using the icon chooser
-To use the icon chooser, and an icon field to your wagtail page, and use the `IconChooserWidget`, widget for example:
+To use the icon chooser, add an icon field to your wagtail page, and use the `IconChooserWidget`, widget for example:
 
 ```python
 from django.db import models
@@ -35,7 +37,7 @@ class MyPage(Page):
     icon = models.CharField(max_length=100, null=True, blank=True, help_text="Humanitarian Icon")
 
     content_panels = Page.content_panels + [
-        FieldPanel("icon",widget=IconChooserWidget)
+        FieldPanel("icon", widget=IconChooserWidget)
     ]
 ```
 
@@ -50,7 +52,7 @@ Scrolling down will show the Ocha humanitarian icons
 
 
 The Icons can be used out of the box in templates rendered on the Wagtail admin, without any configuration.
-To use them on your custom frontend templates, one way to do it is to use the following approach:
+To use them on your frontend templates, one way to do it is to use the following approach:
 
 - Add all icons to your template's context, and have them as a svg sprite. Wagtail provides a way to get all the admin icons as a svg sprite, using a view found 
   at `wagtail.admin.views.home.icons`
