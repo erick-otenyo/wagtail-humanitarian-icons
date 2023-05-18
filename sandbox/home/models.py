@@ -1,9 +1,9 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel
 from wagtail.models import Page
+from wagtailiconchooser.models import CustomIconPage
 
-from wagtailhumanitarianicons.models import CustomIconPage
-from wagtailhumanitarianicons.widgets import IconChooserWidget
+from wagtailiconchooser.widgets import IconChooserWidget
 
 
 class HomePage(CustomIconPage, Page):
